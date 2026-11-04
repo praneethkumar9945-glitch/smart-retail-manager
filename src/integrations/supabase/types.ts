@@ -14,16 +14,280 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bill_counters: {
+        Row: {
+          id: number
+          last_number: number
+        }
+        Insert: {
+          id: number
+          last_number?: number
+        }
+        Update: {
+          id?: number
+          last_number?: number
+        }
+        Relationships: []
+      }
+      bill_items: {
+        Row: {
+          bill_id: string
+          discount: number
+          gst_rate: number
+          id: string
+          line_total: number
+          product_id: string | null
+          product_name: string
+          quantity: number
+          unit_price: number
+        }
+        Insert: {
+          bill_id: string
+          discount?: number
+          gst_rate?: number
+          id?: string
+          line_total?: number
+          product_id?: string | null
+          product_name: string
+          quantity?: number
+          unit_price?: number
+        }
+        Update: {
+          bill_id?: string
+          discount?: number
+          gst_rate?: number
+          id?: string
+          line_total?: number
+          product_id?: string | null
+          product_name?: string
+          quantity?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bill_items_bill_id_fkey"
+            columns: ["bill_id"]
+            isOneToOne: false
+            referencedRelation: "bills"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bill_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bills: {
+        Row: {
+          bill_number: string
+          cashier_id: string | null
+          cashier_name: string
+          created_at: string
+          customer_name: string
+          customer_phone: string
+          discount_total: number
+          gst_total: number
+          id: string
+          notes: string
+          payment_method: string
+          subtotal: number
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          bill_number: string
+          cashier_id?: string | null
+          cashier_name?: string
+          created_at?: string
+          customer_name?: string
+          customer_phone?: string
+          discount_total?: number
+          gst_total?: number
+          id?: string
+          notes?: string
+          payment_method?: string
+          subtotal?: number
+          total?: number
+          updated_at?: string
+        }
+        Update: {
+          bill_number?: string
+          cashier_id?: string | null
+          cashier_name?: string
+          created_at?: string
+          customer_name?: string
+          customer_phone?: string
+          discount_total?: number
+          gst_total?: number
+          id?: string
+          notes?: string
+          payment_method?: string
+          subtotal?: number
+          total?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bills_cashier_id_fkey"
+            columns: ["cashier_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          category: string
+          created_at: string
+          discount_amount: number | null
+          discount_percent: number | null
+          gst_rate: number | null
+          id: string
+          is_active: boolean
+          low_stock_threshold: number
+          name: string
+          offer_active: boolean
+          offer_note: string
+          price: number
+          sku: string | null
+          stock: number
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          discount_amount?: number | null
+          discount_percent?: number | null
+          gst_rate?: number | null
+          id?: string
+          is_active?: boolean
+          low_stock_threshold?: number
+          name: string
+          offer_active?: boolean
+          offer_note?: string
+          price?: number
+          sku?: string | null
+          stock?: number
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          discount_amount?: number | null
+          discount_percent?: number | null
+          gst_rate?: number | null
+          id?: string
+          is_active?: boolean
+          low_stock_threshold?: number
+          name?: string
+          offer_active?: boolean
+          offer_note?: string
+          price?: number
+          sku?: string | null
+          stock?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          full_name: string
+          id: string
+          phone: string
+        }
+        Insert: {
+          created_at?: string
+          full_name?: string
+          id: string
+          phone?: string
+        }
+        Update: {
+          created_at?: string
+          full_name?: string
+          id?: string
+          phone?: string
+        }
+        Relationships: []
+      }
+      store_settings: {
+        Row: {
+          accent_color: string
+          bill_footer_note: string
+          bill_theme: string
+          default_gst_rate: number
+          gst_number: string
+          id: number
+          store_address: string
+          store_name: string
+          store_phone: string
+          updated_at: string
+        }
+        Insert: {
+          accent_color?: string
+          bill_footer_note?: string
+          bill_theme?: string
+          default_gst_rate?: number
+          gst_number?: string
+          id?: number
+          store_address?: string
+          store_name?: string
+          store_phone?: string
+          updated_at?: string
+        }
+        Update: {
+          accent_color?: string
+          bill_footer_note?: string
+          bill_theme?: string
+          default_gst_rate?: number
+          gst_number?: string
+          id?: number
+          store_address?: string
+          store_name?: string
+          store_phone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_any_app_role: { Args: { _user_id: string }; Returns: boolean }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      needs_setup: { Args: never; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "cashier" | "staff"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +414,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "cashier", "staff"],
+    },
   },
 } as const
